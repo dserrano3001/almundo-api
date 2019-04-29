@@ -1,0 +1,40 @@
+{
+  "name": "almundo-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "webpack",
+    "build:production": "webpack --mode=production",
+    "start": "npm-run-all --parallel watch:server watch:build",
+    "watch:server": "nodemon \"./dist/index.js\" --watch \"./dist\" ",
+    "watch:build": "webpack --watch"
+  },
+  "author": "Dayana",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
+    "express": "^4.16.4",
+    "qs": "^6.7.0",
+    "sequelize": "^4.42.0",
+    "sequelize-typescript": "^0.6.10",
+    "sqlite3": "^4.0.6"
+  },
+  "devDependencies": {
+    "@types/express": "^4.16.1",
+    "@types/qs": "^6.5.3",
+    "app-root-path": "^2.2.1",
+    "clean-webpack-plugin": "^2.0.1",
+    "copy-webpack-plugin": "^5.0.3",
+    "nodemon": "^1.18.11",
+    "npm-run-all": "^4.1.5",
+    "reflect-metadata": "^0.1.13",
+    "terser-webpack-plugin": "^1.2.3",
+    "ts-loader": "^5.4.4",
+    "typescript": "^3.4.5",
+    "webpack": "^4.29.5",
+    "webpack-cli": "^3.2.3",
+    "webpack-node-externals": "^1.7.2"
+  }
+}
