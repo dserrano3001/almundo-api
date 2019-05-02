@@ -1,4 +1,9 @@
+export interface IDatabaseConfig {
+  dialect: "sqlite";
+  storage: string;
+}
+
 export interface IConfigApp {
   port: number;
-  url: string;
+  database: IDatabaseConfig;
 } 

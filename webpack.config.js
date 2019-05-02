@@ -1,4 +1,5 @@
 const fs = require('fs');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 var nodeExternals = require('webpack-node-externals');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -39,13 +40,22 @@ module.exports = {
     extensions: ['.ts', '.js']
   },
   plugins: [
+    new CleanWebpackPlugin(),
     new CopyWebpackPlugin([{
       from: './src/config.json',
-      to: __dirname + "/dist/config.json"
+      to: __dirname + "/dist/"
     }, {
       from: './package.json',
       to: __dirname + "/dist/package.json"
-    },{
+    },
+    {
+      from: './src/database.sqlite',
+      to: __dirname + "/dist/database.sqlite"
+    },
+    {
+      from: './src/upload_images',
+      to: __dirname + "/dist/upload_images"
+    }, {
       from: './src/www',
       to: __dirname + "/dist/www"
     }]),

@@ -86,10 +86,10 @@
 /************************************************************************/
 /******/ ({
 
-/***/ "./src/controllers/item.ctrl.ts":
-/*!**************************************!*\
-  !*** ./src/controllers/item.ctrl.ts ***!
-  \**************************************/
+/***/ "./src/controllers/hotel.ctrl.ts":
+/*!***************************************!*\
+  !*** ./src/controllers/hotel.ctrl.ts ***!
+  \***************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -104,151 +104,89 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const request = __webpack_require__(/*! request */ "request");
-function getPrice(value) {
-    const stringValue = value.toString();
-    const decimalValue = stringValue.indexOf('.');
-    let x = [];
-    if (decimalValue > -1) {
-        return stringValue.split('.');
-    }
-    else {
-        return [stringValue, '00'];
-    }
-}
+const hotel_1 = __webpack_require__(/*! ../models/hotel */ "./src/models/hotel.ts");
 function getAll(query) {
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
         try {
-            const options = {
-                url: 'https://api.mercadolibre.com/sites/MLA/search?q=:query',
-                headers: {
-                    'User-Agent': 'request'
-                }
-            };
-            request.get(options, function (err, resp, body) {
-                if (err) {
-                    reject(err);
-                }
-                else {
-                    const data = JSON.parse(body);
-                    const categories = [];
-                    const items = [];
-                    data.results.forEach((element) => {
-                        if (!categories.includes(element.category_id)) {
-                            categories.push(element.category_id);
-                        }
-                        const priceValue = getPrice(element.price);
-                        items.push({
-                            "id": element.id,
-                            "title": element.title,
-                            "price": {
-                                "currency": element.currency_id,
-                                "amount": +priceValue[0],
-                                "decimals": +priceValue[1],
-                            },
-                            "picture": element.thumbnail,
-                            "condition": element.condition,
-                            "free_shipping": element.shipping.free_shipping
-                        });
-                    });
-                    const response = {
-                        author: {
-                            name: 'Dayana',
-                            lastname: 'Serrano'
-                        },
-                        categories: categories,
-                        items
-                    };
-                    resolve(response);
-                }
+            let where = query.where || {};
+            console.log(where);
+            const hotels = yield hotel_1.Hotel.findAll({
+                where: where
             });
+            return resolve(hotels);
         }
         catch (error) {
             return reject(error);
         }
-    });
+    }));
 }
 function getId(id) {
     return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
         try {
-            let options = {
-                url: 'https://api.mercadolibre.com/items/' + id,
-                headers: {
-                    'User-Agent': 'request'
-                }
-            };
-            request.get(options, function (err, resp, body) {
-                if (err) {
-                    reject(err);
-                }
-                else {
-                    const data = JSON.parse(body);
-                    const priceValue = getPrice(data.price);
-                    const response = {
-                        author: {
-                            name: 'Dayana',
-                            lastname: 'Serrano'
-                        },
-                        item: {
-                            id: data.id,
-                            title: data.title,
-                            price: {
-                                currency: data.currency_id,
-                                amount: +priceValue[0],
-                                decimals: +priceValue[1],
-                            },
-                            picture: data.thumbnail,
-                            condition: data.condition,
-                            free_shipping: data.shipping.free_shipping,
-                            sold_quantity: data.sold_quantity,
-                            description: ''
-                        }
-                    };
-                    options.url = 'https://api.mercadolibre.com/items/' + id + '/descriptions';
-                    request.get(options, function (err, resp, body) {
-                        if (err) {
-                            reject(err);
-                        }
-                        else {
-                            const dataDescription = JSON.parse(body);
-                            response.item.description = dataDescription[0].plain_text;
-                            resolve(response);
-                        }
-                    });
-                }
-            });
+            const hotel = yield hotel_1.Hotel.findByPk(id);
+            if (!hotel) {
+                return resolve(null);
+            }
+            return resolve(hotel);
         }
         catch (error) {
             return reject(error);
         }
     }));
 }
-function getIdDescription(id) {
+function post(body) {
     return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
         try {
-            const options = {
-                url: 'https://api.mercadolibre.com/items/' + id + '/descriptions',
-                headers: {
-                    'User-Agent': 'request'
-                }
-            };
-            request.get(options, function (err, resp, body) {
-                if (err) {
-                    reject(err);
-                }
-                else {
-                    resolve(JSON.parse(body));
-                }
-            });
+            let data = body;
+            data.amenities = data.amenities.join();
+            const hotel = yield hotel_1.Hotel.create(data);
+            return resolve(hotel);
         }
         catch (error) {
             return reject(error);
         }
     }));
 }
-exports.ItemCtrl = {
+function update(id, body) {
+    return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        try {
+            console.log('amenities', body);
+            const hotel = yield hotel_1.Hotel.findByPk(id);
+            if (!hotel) {
+                return resolve(null);
+            }
+            let data = body;
+            data.amenities = data.amenities.join();
+            yield hotel.update(data);
+            return resolve(hotel);
+        }
+        catch (error) {
+            console.log('error', error);
+            return reject(error);
+        }
+    }));
+}
+function deleteHotel(id) {
+    return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        try {
+            const hotel = yield hotel_1.Hotel.findByPk(id);
+            if (!hotel) {
+                return resolve(false);
+            }
+            yield hotel.destroy();
+            return resolve(true);
+        }
+        catch (error) {
+            return reject(error);
+        }
+    }));
+}
+exports.HotelCtrl = {
     getAll: getAll,
-    getId: getId
+    getId: getId,
+    post: post,
+    update: update,
+    delete: deleteHotel
 };
 
 
@@ -277,6 +215,7 @@ const contents = JSON.parse(fs.readFileSync(__dirname + '/config.json', 'utf8'))
 const bodyParser = __webpack_require__(/*! body-parser */ "body-parser");
 exports.confApp = contents;
 const express = __webpack_require__(/*! express */ "express");
+const sequelize_1 = __webpack_require__(/*! ./sequelize */ "./src/sequelize.ts");
 const routes_1 = __webpack_require__(/*! ./routes/routes */ "./src/routes/routes.ts");
 var compression = __webpack_require__(/*! compression */ "compression");
 (() => __awaiter(this, void 0, void 0, function* () {
@@ -284,11 +223,21 @@ var compression = __webpack_require__(/*! compression */ "compression");
     app.use(compression({
         level: 9
     }));
+    app.use('/files-bucket', express.static(__dirname + '/upload_images', {
+        maxAge: 1444444
+    }));
     app.use("/", express.static(__dirname + '/www', {
         maxAge: 1444444
     }));
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(bodyParser.json());
+    app.use('/', (req, res, next) => {
+        if (req.url.indexOf("?") > -1) {
+            req.qs = req.url.split('?')[1];
+        }
+        next();
+    });
+    yield sequelize_1.sequelize.sync({ force: false, alter: false });
     routes_1.initRoute(app);
     app.listen(exports.confApp.port, () => {
         console.log('app listen port ' + exports.confApp.port);
@@ -298,10 +247,68 @@ var compression = __webpack_require__(/*! compression */ "compression");
 
 /***/ }),
 
-/***/ "./src/routes/item.router.ts":
-/*!***********************************!*\
-  !*** ./src/routes/item.router.ts ***!
-  \***********************************/
+/***/ "./src/models/hotel.ts":
+/*!*****************************!*\
+  !*** ./src/models/hotel.ts ***!
+  \*****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const sequelize_typescript_1 = __webpack_require__(/*! sequelize-typescript */ "sequelize-typescript");
+let Hotel = class Hotel extends sequelize_typescript_1.Model {
+};
+__decorate([
+    sequelize_typescript_1.Column({
+        type: sequelize_typescript_1.DataType.BIGINT,
+        autoIncrement: true,
+        primaryKey: true
+    }),
+    __metadata("design:type", Number)
+], Hotel.prototype, "id", void 0);
+__decorate([
+    sequelize_typescript_1.Column(sequelize_typescript_1.DataType.STRING(255)),
+    __metadata("design:type", String)
+], Hotel.prototype, "name", void 0);
+__decorate([
+    sequelize_typescript_1.Column(sequelize_typescript_1.DataType.INTEGER),
+    __metadata("design:type", Number)
+], Hotel.prototype, "stars", void 0);
+__decorate([
+    sequelize_typescript_1.Column(sequelize_typescript_1.DataType.DECIMAL(10, 2)),
+    __metadata("design:type", Number)
+], Hotel.prototype, "price", void 0);
+__decorate([
+    sequelize_typescript_1.Column(sequelize_typescript_1.DataType.STRING(255)),
+    __metadata("design:type", String)
+], Hotel.prototype, "image", void 0);
+__decorate([
+    sequelize_typescript_1.Column(sequelize_typescript_1.DataType.TEXT),
+    __metadata("design:type", String)
+], Hotel.prototype, "amenities", void 0);
+Hotel = __decorate([
+    sequelize_typescript_1.Table
+], Hotel);
+exports.Hotel = Hotel;
+
+
+/***/ }),
+
+/***/ "./src/routes/hotel.router.ts":
+/*!************************************!*\
+  !*** ./src/routes/hotel.router.ts ***!
+  \************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -316,13 +323,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 const express = __webpack_require__(/*! express */ "express");
-const item_ctrl_1 = __webpack_require__(/*! ../controllers/item.ctrl */ "./src/controllers/item.ctrl.ts");
+const hotel_ctrl_1 = __webpack_require__(/*! ../controllers/hotel.ctrl */ "./src/controllers/hotel.ctrl.ts");
+const Qs = __webpack_require__(/*! qs */ "qs");
+const bodyParser = __webpack_require__(/*! body-parser */ "body-parser");
 const router = express.Router();
-router.get('/items', (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+router.get('/hotels', (req, res, next) => __awaiter(this, void 0, void 0, function* () {
     try {
-        const items = yield item_ctrl_1.ItemCtrl.getAll(req.query);
+        let q = (req.qs) ? Qs.parse(req.qs) : {};
+        const hotels = yield hotel_ctrl_1.HotelCtrl.getAll(q);
         res.status(200).json({
-            data: items,
+            data: hotels,
             result: true
         });
     }
@@ -333,11 +343,57 @@ router.get('/items', (req, res, next) => __awaiter(this, void 0, void 0, functio
         });
     }
 }));
-router.get('/items/:id', (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+router.get('/hotels/:id', (req, res, next) => __awaiter(this, void 0, void 0, function* () {
     try {
-        const item = yield item_ctrl_1.ItemCtrl.getId(req.params.id);
+        const hotel = yield hotel_ctrl_1.HotelCtrl.getId(req.params.id);
         res.status(200).json({
-            data: item,
+            data: hotel,
+            result: true
+        });
+    }
+    catch (error) {
+        console.log('error', error);
+        res.status(500).json({
+            data: error,
+            result: false
+        });
+    }
+}));
+router.post('/hotels', (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+    try {
+        const hotel = yield hotel_ctrl_1.HotelCtrl.post(req.body);
+        res.status(200).json({
+            data: hotel,
+            result: true
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            data: error,
+            result: false
+        });
+    }
+}));
+router.put('/hotels/:id', (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+    try {
+        const hotel = yield hotel_ctrl_1.HotelCtrl.update(req.params.id, req.body);
+        res.status(200).json({
+            data: hotel,
+            result: true
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            data: error,
+            result: false
+        });
+    }
+}));
+router.delete('/hotels/:id', (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+    try {
+        const hotel = yield hotel_ctrl_1.HotelCtrl.delete(req.params.id);
+        res.status(200).json({
+            data: null,
             result: true
         });
     }
@@ -372,10 +428,39 @@ function initRoute(app) {
             result: true
         });
     });
-    router.use(__webpack_require__(/*! ./item.router */ "./src/routes/item.router.ts"));
+    router.use(__webpack_require__(/*! ./hotel.router */ "./src/routes/hotel.router.ts"));
     app.use('/api', router);
 }
 exports.initRoute = initRoute;
+
+
+/***/ }),
+
+/***/ "./src/sequelize.ts":
+/*!**************************!*\
+  !*** ./src/sequelize.ts ***!
+  \**************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const sequelize_typescript_1 = __webpack_require__(/*! sequelize-typescript */ "sequelize-typescript");
+const index_1 = __webpack_require__(/*! ./index */ "./src/index.ts");
+const hotel_1 = __webpack_require__(/*! ./models/hotel */ "./src/models/hotel.ts");
+console.log(__dirname + "/" + index_1.confApp.database.storage);
+exports.sequelize = new sequelize_typescript_1.Sequelize({
+    dialect: index_1.confApp.database.dialect,
+    storage: __dirname + "/" + index_1.confApp.database.storage,
+    define: {
+        timestamps: true,
+        paranoid: true,
+    },
+    timezone: '+00:00',
+    logging: true,
+});
+exports.sequelize.addModels([hotel_1.Hotel]);
 
 
 /***/ }),
@@ -424,14 +509,25 @@ module.exports = require("fs");
 
 /***/ }),
 
-/***/ "request":
-/*!**************************!*\
-  !*** external "request" ***!
-  \**************************/
+/***/ "qs":
+/*!*********************!*\
+  !*** external "qs" ***!
+  \*********************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = require("request");
+module.exports = require("qs");
+
+/***/ }),
+
+/***/ "sequelize-typescript":
+/*!***************************************!*\
+  !*** external "sequelize-typescript" ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("sequelize-typescript");
 
 /***/ })
 

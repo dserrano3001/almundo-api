@@ -1,0 +1,170 @@
+{
+	"info": {
+		"_postman_id": "24752caa-f44e-48f5-a172-b1c51e292531",
+		"name": "AllMundo Api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Hotels",
+			"item": [
+				{
+					"name": "Get all",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\n\n  {\n    \"name\": \"Hotel Continental\",\n    \"stars\": 3,\n    \"price\": 774.53,\n    \"image\": \"802720_60_b.jpg\",\n    \"amenities\": [\n      \"deep-soaking-bathtub\",\n      \"coffe-maker\",\n      \"newspaper\",\n      \"beach\",\n      \"children-club\"\n    ]\n  }"
+						},
+						"url": {
+							"raw": "localhost:5000/api/hotels",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"hotels"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get By ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:5000/api/hotels/2",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"hotels",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Hotel Stefanos\",\n  \"stars\": 3,\n  \"price\": 994.18,\n  \"image\": \"4900059_30_b.jpg\",\n  \"amenities\": [\n    \"safety-box\",\n    \"nightclub\",\n    \"deep-soaking-bathtub\",\n    \"beach\",\n    \"business-center\"\n  ]\n}"
+						},
+						"url": {
+							"raw": "localhost:5000/api/hotels",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"hotels"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Hotel Stefanos\",\n  \"stars\": 3,\n  \"price\": 994.18,\n  \"image\": \"4900059_30_b.jpg\",\n  \"amenities\": [\n    \"safety-box\",\n    \"nightclub\",\n    \"deep-soaking-bathtub\",\n    \"beach\",\n    \"business-center\"\n  ]\n}"
+						},
+						"url": {
+							"raw": "localhost:5000/api/hotels/266978",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"hotels",
+								"266978"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:5000/api/hotels/2",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"hotels",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -10,6 +10,6 @@ export function initRoute(app: express.Application) {
     });
   });
   
-  router.use(require("./item.router"));
+  router.use(require("./hotel.router"));
   app.use('/api', router);
 }

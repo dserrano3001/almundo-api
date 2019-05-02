@@ -1,5 +1,5 @@
 {
-  "name": "meli-api",
+  "name": "almundo-api",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
@@ -16,10 +16,14 @@
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
     "express": "^4.16.4",
-    "request": "^2.88.0"
+    "qs": "^6.7.0",
+    "sequelize": "^4.42.0",
+    "sequelize-typescript": "^0.6.10",
+    "sqlite3": "^4.0.6"
   },
   "devDependencies": {
     "@types/express": "^4.16.1",
+    "@types/qs": "^6.5.3",
     "app-root-path": "^2.2.1",
     "clean-webpack-plugin": "^2.0.1",
     "copy-webpack-plugin": "^5.0.3",
