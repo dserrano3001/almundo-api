@@ -25,7 +25,6 @@
 		],
 		"types": [
 			"node",
-			"lodash",
 			"express"
 		],
 		"paths": {

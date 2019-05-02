@@ -1,16 +1,8 @@
 {
   "development": {
-    "port": 5000,
-    "database": {
-      "dialect": "sqlite",
-      "storage": "database.sqlite"
-    }
+    "port": 5000
   },
   "production": {
-    "port": 3500,
-    "database": {
-      "dialect": "sqlite",
-      "storage": "database.sqlite"
-    }
+    "port": 3500
   }
 }

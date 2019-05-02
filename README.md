@@ -1,6 +1,6 @@
-# Almundo API
+# Mercado Libre API
 
-api para el CRUD de hoteles
+api para obtener el listado de items y el detalle de cada uno con su respectiva descripción, que se obtiene a traveś de una api externa de Mercado libre
 
 ## Comenzando 🚀
 
